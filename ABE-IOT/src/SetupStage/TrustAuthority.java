@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 import SpecialDataStructures.Polynomial;
-import org.w3c.dom.Node;
+
 
 
 public class TrustAuthority {
@@ -155,7 +155,7 @@ public class TrustAuthority {
 
             if(node.value == '*'){
                     node.k_treshold = getNumberChildren(node) - 1;
-                    int degree = node.k_treshold - 1;
+                    int degree = Math.abs(node.k_treshold - 1);
                     //System.out.println("Degree :" + degree);
                     int numberCoefficients = rand.nextInt(0,10);
                     for(int index=0;index<numberCoefficients;index++)
@@ -165,7 +165,11 @@ public class TrustAuthority {
                     powers.add(degree);
                     for(int index=1;index<numberCoefficients-1;index++)
                     {
-                        powers.add(rand.nextInt(0,degree-1));
+                        if(degree > 0) {
+                            powers.add(rand.nextInt(0, degree - 1));
+                        }else{
+                            powers.add(0);
+                        }
                     }
                     powers.add(0);
                     node.setPolynomial(new Polynomial(coefficients,powers,degree));
@@ -205,6 +209,7 @@ public class TrustAuthority {
                 node.setPolynomial(new Polynomial(coefficients,powers,degree));
                 //System.out.println(coefficients + "---" + powers + "---" + degree);
                 if(node.value!='+') {
+                    //System.out.println(node.value);
                     String atribute = null;
                     switch (node.value)
                     {
@@ -237,14 +242,25 @@ public class TrustAuthority {
                             break;
                         case 'J':
                             atribute = "CEO";
-                        case 'V':
+                        case 'K':
                             atribute = "ACCORD_SUPERIOR-YES";
                             break;
                     }
-                    //System.out.println("C'y : " + Math.abs(atribute.hashCode()) + "---" + node.getPolynomial().evaluate(0));
-                    System.out.println("C'y :" +  Math.pow ( (atribute.hashCode() % 2 + 1.5) ,node.getPolynomial().evaluate(0)));
-                    if(Math.pow((atribute.hashCode() % 2 + 1.5),node.getPolynomial().evaluate(0)) == Double.POSITIVE_INFINITY){
-                        System.out.println("A");
+                    double b = rand.nextDouble(1,9);
+                    int a = rand.nextInt(1,9);
+                    if(Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)) == Double.POSITIVE_INFINITY ||
+                            Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)) == Double.NEGATIVE_INFINITY
+                       )
+                    {
+                        while(Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)) == Double.POSITIVE_INFINITY
+                             || Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)) == Double.NEGATIVE_INFINITY)
+                        {
+                            a = rand.nextInt(1,9);
+                            b = rand.nextDouble(1,9);
+                        }
+                        System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
+                    }else{
+                        System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
                     }
                 }
             }
@@ -350,5 +366,6 @@ public class TrustAuthority {
         cipherText = new CipherText(getProductTree(TreeESP,DO),message,h.pow(BigInteger.valueOf((long)s)),
                 pairingFunction.pairing(generator,generator).pow(alpha.toBigInteger()).pow(BigInteger.valueOf((long)s)),leafNodes);
     }
+
 
 }

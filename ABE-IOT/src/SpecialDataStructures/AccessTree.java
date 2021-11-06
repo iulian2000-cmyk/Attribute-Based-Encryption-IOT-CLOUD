@@ -43,9 +43,8 @@ public class AccessTree {
         for(JuridicPerson user : users)
         {
             AccessTree accessTree = new AccessTree();
-            String postfix = "AB+C+D+E+F+G+H+I+V*";
-            char[] charArray = postfix.toCharArray();
-            NodeAccessTree root = accessTree.constructTree(charArray);
+            String infix = "((A+B+C+D+E+F+G+H+I+J)*K)";
+            NodeAccessTree root = accessTree.constructTree(infix);
             accessTree = new AccessTree(root,user);
             trees.add(accessTree);
         }
@@ -101,33 +100,72 @@ public class AccessTree {
 
     /**
      * Function which creates the access tree which is the same thing with the the expression tree
-     * @param postfix the postfix expresion of the logical expression of the access structure
+     * @param infix the infix expresion of the logical expression of the access structure
      * @return NodeAccessTree
      */
-    public NodeAccessTree constructTree(char[] postfix)
+    public NodeAccessTree constructTree(String infix)
     {
-        Stack<NodeAccessTree> st = new Stack<>();
-        NodeAccessTree accessTree, subtree1, subtree2;
-        for (char c : postfix) {
-            if (!isOperator(c)) {
-                accessTree = new NodeAccessTree(c);
-                st.push(accessTree);
-            } else {
-                accessTree = new NodeAccessTree(c);
-                subtree1 = st.pop();
-                subtree2 = st.pop();
-                accessTree.right = subtree1;
-                accessTree.left = subtree2;
-                st.push(accessTree);
+
+        Stack<NodeAccessTree> stN = new Stack<>();
+        Stack<Character> stC = new Stack<>();
+        NodeAccessTree t, t1, t2;
+        int []p = new int[123];
+        p['+'] = p['-'] = 1;
+        p['/'] = p['*'] = 2;
+        p['^'] = 3;
+        p[')'] = 0;
+
+        for (int i = 0; i < infix.length(); i++)
+        {
+            if (infix.charAt(i) == '(') {
+
+                // Push '(' in char stack
+                stC.add(infix.charAt(i));
+            }
+
+            // Push the operands in node stack
+            else if (Character.isAlphabetic(infix.charAt(i)))
+            {
+                t = new NodeAccessTree(infix.charAt(i));
+                stN.add(t);
+            }
+            else if (p[infix.charAt(i)] > 0)
+            {
+                while (
+                        !stC.isEmpty() && stC.peek() != '('
+                                && ((infix.charAt(i) != '^' && p[stC.peek()] >= p[infix.charAt(i)])
+                                || (infix.charAt(i) == '^'
+                                && p[stC.peek()] > p[infix.charAt(i)])))
+                {
+                    t = new NodeAccessTree( stC.peek());
+                    stC.pop();
+                    t1 = stN.peek();
+                    stN.pop();
+                    t2 = stN.peek();
+                    stN.pop();
+                    t.left = t2;
+                    t.right = t1;
+                    stN.add(t);
+                }
+                stC.push(infix.charAt(i));
+            }
+            else if (infix.charAt(i) == ')') {
+                while (!stC.isEmpty() && stC.peek() != '(')
+                {
+                    t = new NodeAccessTree(stC.peek());
+                    stC.pop();
+                    t1 = stN.peek();
+                    stN.pop();
+                    t2 = stN.peek();
+                    stN.pop();
+                    t.left = t2;
+                    t.right = t1;
+                    stN.add(t);
+                }
+                stC.pop();
             }
         }
-        accessTree = st.peek();
-        st.pop();
-        return accessTree;
+        t = stN.peek();
+        return t;
     }
-
-
-
-
-
 }

@@ -59,6 +59,9 @@ public class Main {
         AccessTree accessTree = new AccessTree();
         List<AccessTree> accessTrees =  accessTree.buildDOsTree(users);
         NodeAccessTree TreeESP = accessTree.getTree(accessTrees);
+        //TA.inOrder(TreeESP);
+
+
         TA.generateTreshHoldsAndPolynomsAnd_C_first_values(TreeESP,0);
         TA.generateC_values(TreeESP);
 
