@@ -102,10 +102,10 @@ public class TrustAuthority {
 
     /**
      * Function which generates the SK
-     * @param user
-     * @throws Exception
+     * @param user the user for which the SK is generated
+     * @throws Exception exception for an opperation
      */
-    public static void generateSK(User user) throws Exception
+    public static void generateSK(User user)
     {
         Element r = Zr.newRandomElement();
         Element D = generator.pow(alpha.add(r).div(beta).toBigInteger());
@@ -113,7 +113,7 @@ public class TrustAuthority {
 
         for(String attribute : user.getList_attributes()) {
             Element rj = Zr.newRandomElement();
-            System.out.println("L[" + user.getList_attributes().indexOf(attribute) + "]=" + CalculateLj(rj, Zr, attribute, generator));
+            System.out.println("L[" + user.getList_attributes().indexOf(attribute) + "]=" + CalculateLj(rj, generator));
             System.out.println("R[" + user.getList_attributes().indexOf(attribute) + "]=" + CalculateDj(rj, r, generator, attribute));
         }
     }
@@ -124,7 +124,7 @@ public class TrustAuthority {
      * @param attribute - the attribute,
      * @param generator - the generator of the field.
      */
-    public static Element CalculateDj(Element rj,Element r,Element generator,String attribute) throws Exception
+    public static Element CalculateDj(Element rj,Element r,Element generator,String attribute)
     {
         Element power = rj;
         power.set(attribute.hashCode());
@@ -135,16 +135,15 @@ public class TrustAuthority {
     /**
      * This function generate the D_j , where j is an attribute  for a user
      * @param rj - the random rj from Zp chosen
-     * @param attribute - the attribute,
      * @param generator - the generator of the field.
      */
-    public static Element CalculateLj(Element rj,Field Zr,String attribute,Element generator) {
+    public static Element CalculateLj(Element rj,Element generator) {
         return generator.pow(rj.toBigInteger());
     }
 
     /**
      * Function which calculates the treshold values and those polynoms.
-     * @param node
+     * @param node the node for which the polynom is determined
      */
 
     public static void generateTreshHoldsAndPolynomsAnd_C_first_values(NodeAccessTree node,int indexNode) {
@@ -173,9 +172,6 @@ public class TrustAuthority {
                     }
                     powers.add(0);
                     node.setPolynomial(new Polynomial(coefficients,powers,degree));
-                    //System.out.println(coefficients + "---" + powers + "---" + degree);
-
-                    //System.out.println("P(0) : "  + node.getPolynomial().evaluate(0));
                     if(indexNode == 0) {
                         //System.out.println(coefficients + "---" + powers);
                         s = node.getPolynomial().evaluate(0);
@@ -210,42 +206,20 @@ public class TrustAuthority {
                 //System.out.println(coefficients + "---" + powers + "---" + degree);
                 if(node.value!='+') {
                     //System.out.println(node.value);
-                    String atribute = null;
-                    switch (node.value)
-                    {
-                        case 'A':
-                            atribute = "EMPLOYEE_PRODUCTION";
-                            break;
-                        case 'B':
-                            atribute = "LEADER_PRODUCTION";
-                            break;
-                        case 'C':
-                            atribute = "DIRECTOR_PRODUCTION";
-                            break;
-                        case 'D':
-                            atribute = "DIRECTOR";
-                            break;
-                        case 'E':
-                            atribute = "DIRECTOR_ECONOMIC";
-                            break;
-                        case 'F':
-                            atribute = "ACCOUNTANT";
-                            break;
-                        case 'G':
-                            atribute = "ADMINISTRATOR";
-                            break;
-                        case 'H':
-                            atribute = "CHIEF_ACCOUNTANT";
-                            break;
-                        case 'I':
-                            atribute = "SECURITY_ADMIN";
-                            break;
-                        case 'J':
-                            atribute = "CEO";
-                        case 'K':
-                            atribute = "ACCORD_SUPERIOR-YES";
-                            break;
-                    }
+                    String atribute = switch (node.value) {
+                        case 'A' -> "EMPLOYEE_PRODUCTION";
+                        case 'B' -> "LEADER_PRODUCTION";
+                        case 'C' -> "DIRECTOR_PRODUCTION";
+                        case 'D' -> "DIRECTOR";
+                        case 'E' -> "DIRECTOR_ECONOMIC";
+                        case 'F' -> "ACCOUNTANT";
+                        case 'G' -> "ADMINISTRATOR";
+                        case 'H' -> "CHIEF_ACCOUNTANT";
+                        case 'I' -> "SECURITY_ADMIN";
+                        case 'J' -> "CEO";
+                        case 'K' -> "ACCORD_SUPERIOR-YES";
+                        default -> null;
+                    };
                     double b = rand.nextDouble(1,9);
                     int a = rand.nextInt(1,9);
                     if(Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)) == Double.POSITIVE_INFINITY ||
@@ -258,10 +232,8 @@ public class TrustAuthority {
                             a = rand.nextInt(1,9);
                             b = rand.nextDouble(1,9);
                         }
-                        System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
-                    }else{
-                        System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
                     }
+                    System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
                 }
             }
             indexNode++;
@@ -279,17 +251,17 @@ public class TrustAuthority {
 
     /**
      * Function which calculates the number of children
-     * @param node
-     * @return
+     * @param node the node for which the number of children is determined
+     * @return int
      */
     public static int getNumberChildren(NodeAccessTree node) {
         if (node.left == null && node.right == null) {
             return 0;
         } else {
-            if ((node.left == null) && (node.right != null)){
+            if (node.left == null){
                return 1 +  getNumberChildren(node.right);
             }else{
-                if((node.left!=null) &&(node.right == null))
+                if(node.right == null)
                 {
                     return 1+getNumberChildren(node.left);
                 }else{
@@ -300,8 +272,8 @@ public class TrustAuthority {
     }
 
     /**
-     * Function which generates the CT
-     * @param root
+     * Function which generates the C values
+     * @param root the node for which the C values are generated
      */
     public void generateC_values(NodeAccessTree root)
     {
@@ -309,7 +281,7 @@ public class TrustAuthority {
         {
             if(root.value !='*' && root.value!='+')
             {
-                System.out.println("C_y : " + generator.pow(BigInteger.valueOf((long) root.getPolynomial().evaluate(0))));
+                System.out.println("C_y : " + generator.pow(BigInteger.valueOf(root.getPolynomial().evaluate(0))));
             }
             generateC_values(root.left);
             generateC_values(root.right);
@@ -333,7 +305,6 @@ public class TrustAuthority {
     /**
      * Gets the set of the leaf nodes for a tree
      * @param root the root of the tree
-     * @return void
      */
     public void getLeafNodes(NodeAccessTree root,Vector<NodeAccessTree> leafNodes)
     {

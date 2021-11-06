@@ -28,8 +28,8 @@ public class NodeAccessTree {
         return polynomial;
     }
 
-    public void setPolynomial(Polynomial polynomial) {
-        this.polynomial = polynomial;
+    public void setPolynomial(Polynomial polynomialToSet) {
+        polynomial = polynomialToSet;
     }
 
     public  NodeAccessTree getLeft() {
