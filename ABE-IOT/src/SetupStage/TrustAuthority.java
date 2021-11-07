@@ -70,9 +70,7 @@ public class TrustAuthority {
         h = generator.pow(beta.toBigInteger());
         pairing_result = pairing.pairing(generator, generator);
         pairing_result = pairing_result.pow(alpha.toBigInteger());
-
-
-
+        
     }
 
     /**
@@ -233,7 +231,9 @@ public class TrustAuthority {
                             b = rand.nextDouble(1,9);
                         }
                     }
-                    System.out.println("C'y :" + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
+                    //System.out.println("C'_" + atribute + ":"  + Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
+                    node.setC_(Math.pow((atribute.hashCode() % a + b),node.getPolynomial().evaluate(0)));
+                    System.out.println("C'_" + atribute + ":" + node.getC_());
                 }
             }
             indexNode++;
@@ -281,7 +281,23 @@ public class TrustAuthority {
         {
             if(root.value !='*' && root.value!='+')
             {
-                System.out.println("C_y : " + generator.pow(BigInteger.valueOf(root.getPolynomial().evaluate(0))));
+                String attribute = switch (root.value) {
+                    case 'A' -> "EMPLOYEE_PRODUCTION";
+                    case 'B' -> "LEADER_PRODUCTION";
+                    case 'C' -> "DIRECTOR_PRODUCTION";
+                    case 'D' -> "DIRECTOR";
+                    case 'E' -> "DIRECTOR_ECONOMIC";
+                    case 'F' -> "ACCOUNTANT";
+                    case 'G' -> "ADMINISTRATOR";
+                    case 'H' -> "CHIEF_ACCOUNTANT";
+                    case 'I' -> "SECURITY_ADMIN";
+                    case 'J' -> "CEO";
+                    case 'K' -> "ACCORD_SUPERIOR-YES";
+                    default -> null;
+                };
+                //System.out.println("C_" +attribute + ":" + generator.pow(BigInteger.valueOf(root.getPolynomial().evaluate(0))));
+                root.setC(generator.pow(BigInteger.valueOf(root.getPolynomial().evaluate(0))));
+                System.out.println("C_" +attribute + ":" + root.getC());
             }
             generateC_values(root.left);
             generateC_values(root.right);

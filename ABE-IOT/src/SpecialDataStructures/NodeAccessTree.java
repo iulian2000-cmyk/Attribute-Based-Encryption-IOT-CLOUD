@@ -1,8 +1,7 @@
 package SpecialDataStructures;
 
 
-
-
+import it.unisa.dia.gas.jpbc.Element;
 
 public class NodeAccessTree {
 
@@ -11,6 +10,27 @@ public class NodeAccessTree {
     public NodeAccessTree left,right;
     public static Polynomial polynomial;
     NodeAccessTree parent;
+    public double C_;
+    public Element C;
+
+
+
+    public double getC_() {
+        return C_;
+    }
+
+    public void setC_(double c_) {
+        C_ = c_;
+    }
+
+    public Element getC() {
+        return C;
+    }
+
+    public void setC(Element c) {
+        C = c;
+    }
+
 
     public NodeAccessTree(char value){
         this.value = value;
@@ -51,4 +71,3 @@ public class NodeAccessTree {
 
 
 }
-

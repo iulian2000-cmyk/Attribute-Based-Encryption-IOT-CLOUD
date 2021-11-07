@@ -85,9 +85,4 @@ public class SystemSetup {
         this.generator_g = G1.newRandomElement();
 
     }
-
-
-
-
-
 }
