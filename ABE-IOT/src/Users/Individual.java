@@ -4,37 +4,49 @@ import SpecialDataStructures.ACCORD_SUPERIOR;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
 
 public class Individual extends User
 {
-    private String Name;
-    private String Address;
-    private String CNP;
-    private Date DateBirth;
-    private JuridicPerson placeJOB;
-    private Position position;
-    private static ACCORD_SUPERIOR accord_superior;
+    private  String Name;
+    private  String Address;
+    private  String CNP;
+    private  Date DateBirth;
+    private  JuridicPerson placeJOB;
+    private  Position position;
+    private  ACCORD_SUPERIOR accord_superior;
 
-    public static ACCORD_SUPERIOR getAccord_superior() {
+    public  ACCORD_SUPERIOR getAccord_superior() {
         return accord_superior;
     }
 
-    public static void setAccord_superior(ACCORD_SUPERIOR accord_superior) {
-        Individual.accord_superior = accord_superior;
+    public  void setAccord_superior(ACCORD_SUPERIOR accord_superior_firm) {
+       accord_superior = accord_superior_firm;
+
     }
 
+    /**
+     * Setter for ID user
+     * @param ID_user_to_add user id
+     */
+    public void setID_user(int ID_user_to_add) {
+        this.ID_user = ID_user_to_add;
+    }
     public Individual(int ID, String name, String Address, String CNP, Date date, JuridicPerson job, Position pos,ACCORD_SUPERIOR accord_superior)
     {
-        this.ID_user = ID;
-        this.setName(name);
-        this.setAddress(Address);
-        this.setCNP(CNP);
-        this.setDateBirth(date);
-        this.setPlaceJOB(job);
-        this.setPosition(position);
-        this.setAccord_superior(accord_superior);
-        this.list_attributes = new ArrayList<>();
+        setID_user(ID);
+        setName(name);
+        setAddress(Address);
+        setCNP(CNP);
+        setDateBirth(date);
+        setPlaceJOB(job);
+        setPosition(pos);
+        setAccord_superior(accord_superior);
+
+
+
+        //System.out.println(ID_user);
+        list_attributes = new ArrayList<>();
 
         list_attributes.add(String.valueOf(ID));
         list_attributes.add(name);
@@ -44,52 +56,58 @@ public class Individual extends User
         list_attributes.add(job.getOfficialName());
         list_attributes.add(pos.toString());
     }
-    public String getName() {
+    public  String getName() {
         return Name;
     }
 
-    public void setName(String name) {
+    public  void setName(String name) {
         Name = name;
     }
 
-    public String getAddress() {
+    public  String getAddress() {
         return Address;
     }
 
-    public void setAddress(String address) {
+    public  void setAddress(String address) {
         Address = address;
     }
 
-    public String getCNP() {
+    public  String getCNP() {
         return CNP;
     }
 
-    public void setCNP(String CNP) {
-        this.CNP = CNP;
+    public  void setCNP(String CNP_user) {
+        CNP = CNP_user;
     }
-
-    public Date getDateBirth() {
+    /**
+     * Getter for ID user
+     * @return int
+     */
+    public  int getID_user() {
+        return super.ID_user;
+    }
+    public  Date getDateBirth() {
         return DateBirth;
     }
 
-    public void setDateBirth(Date dateBirth) {
+    public  void setDateBirth(Date dateBirth) {
         DateBirth = dateBirth;
     }
 
-    public JuridicPerson getPlaceJOB() {
+    public  JuridicPerson getPlaceJOB() {
         return placeJOB;
     }
 
-    public void setPlaceJOB(JuridicPerson placeJOB) {
-        this.placeJOB = placeJOB;
+    public  void setPlaceJOB(JuridicPerson placeJOB_user) {
+        placeJOB = placeJOB_user;
     }
 
-    public Position getPosition() {
+    public  Position getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
+    public  void setPosition(Position position_firm) {
+        position = position_firm;
     }
 
 

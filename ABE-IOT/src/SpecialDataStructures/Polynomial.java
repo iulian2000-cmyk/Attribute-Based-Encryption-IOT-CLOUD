@@ -4,21 +4,21 @@ import java.util.Vector;
 
 public class Polynomial {
 
-    private static Vector<Integer> coefficients;
-    private static Vector<Integer> powers;
+    private Vector<Integer> coefficients;
+    private  Vector<Integer> powers;
     private int degree;
 
 
-    public static Vector<Integer> getCoefficients() {
+    public  Vector<Integer> getCoefficients() {
         return coefficients;
     }
 
-    public static Vector<Integer> getPowers() {
+    public  Vector<Integer> getPowers() {
         return powers;
     }
 
-    public static void setPowers(Vector<Integer> powers) {
-        Polynomial.powers = powers;
+    public  void setPowers(Vector<Integer> Powers) {
+         powers = Powers;
     }
 
 

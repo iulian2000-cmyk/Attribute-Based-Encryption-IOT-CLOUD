@@ -2,32 +2,19 @@ package Users;
 
 import it.unisa.dia.gas.jpbc.Element;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 
-abstract public class User {
-    protected static int ID_user;
-    protected static Element D;
-    protected static List<String> list_attributes ;
-    /**
-     * Getter for ID user
-     * @return int
-     */
-    public static int getID_user() {
-        return ID_user;
-    }
-
-    /**
-     * Setter for ID user
-     * @param ID_user user id
-     */
-    public void setID_user(int ID_user) {
-        this.ID_user = ID_user;
-    }
+public class User {
+    protected int ID_user;
+    protected  Element D;
+    protected  Element t;
+    protected  Element blindedD;
+    protected  Element r;
+    protected  List<String> list_attributes ;
 
 
-    public static List<String> getList_attributes() {
+    public  List<String> getList_attributes() {
         return list_attributes;
     }
 
@@ -36,11 +23,35 @@ abstract public class User {
     }
 
 
-    public static Element getD() {
+    public  Element getD() {
         return D;
     }
 
-    public static void setD(Element d) {
+    public  void setD(Element d) {
         D = d;
+    }
+
+    public  Element getBlindedD() {
+        return blindedD;
+    }
+
+    public  void setBlindedD(Element blinded_D) {
+         blindedD = blinded_D;
+    }
+
+    public  Element getT() {
+        return t;
+    }
+
+    public  void setT(Element T) {
+        t = T;
+    }
+
+    public  Element getR() {
+        return r;
+    }
+
+    public  void setR(Element r_element) {
+        r = r_element;
     }
 }

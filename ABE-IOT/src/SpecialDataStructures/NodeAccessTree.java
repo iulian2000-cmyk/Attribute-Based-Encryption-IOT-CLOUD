@@ -8,12 +8,19 @@ public class NodeAccessTree {
     public char value;
     public int k_treshold;
     public NodeAccessTree left,right;
-    public static Polynomial polynomial;
-    NodeAccessTree parent;
+    public  Polynomial polynomial;
+    public  NodeAccessTree parent;
     public double C_;
     public Element C;
+    public Element F_y;
 
+    public Element getF_y() {
+        return F_y;
+    }
 
+    public void setF_y(Element f_y) {
+        F_y = f_y;
+    }
 
     public double getC_() {
         return C_;

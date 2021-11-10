@@ -12,16 +12,34 @@ public class JuridicPerson extends User {
     private Date dateBirth;
 
 
+    /**
+     * Getter for ID user
+     * @return int
+     */
+    public  int getID_user() {
+        return this.ID_user;
+    }
+
+    /**
+     * Setter for ID user
+     * @param ID_user_to_add user id
+     */
+    public void setID_user(int ID_user_to_add) {
+        this.ID_user = ID_user_to_add;
+    }
+
 
     public JuridicPerson(int ID, String name, String Address, String juridicForm, String uniqueCODE, String activity_COD, Date dateBirth)
     {
-        this.setID_user(ID);
-        this.setOfficialName(name);
-        this.setAddress(Address);
-        this.setJuridicForm(juridicForm);
-        this.setUniqueCODE(uniqueCODE);
-        this.setActivity_COD(activity_COD);
-        this.setDateBirth(dateBirth);
+        setID_user(ID);
+        setOfficialName(name);
+        setAddress(Address);
+        setJuridicForm(juridicForm);
+        setUniqueCODE(uniqueCODE);
+        setActivity_COD(activity_COD);
+        setDateBirth(dateBirth);
+
+        //System.out.println(ID_user);
 
         this.list_attributes = new ArrayList<>();
 
@@ -126,4 +144,6 @@ public class JuridicPerson extends User {
     public void setDateBirth(Date dateBirth) {
         this.dateBirth = dateBirth;
     }
+
+
 }

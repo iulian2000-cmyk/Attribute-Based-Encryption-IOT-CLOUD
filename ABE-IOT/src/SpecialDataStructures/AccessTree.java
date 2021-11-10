@@ -8,8 +8,7 @@ import java.util.Stack;
 
 public class AccessTree {
     private static NodeAccessTree root;
-    private static JuridicPerson juridicPerson;
-
+    private static JuridicPerson data_owner;
     public  AccessTree(){
 
     }
@@ -21,14 +20,14 @@ public class AccessTree {
     }
 
 
-    public static void setJuridicPerson(JuridicPerson juridicPerson) {
-        AccessTree.juridicPerson = juridicPerson;
+    public static void setData_owner(JuridicPerson DO) {
+        data_owner = DO;
     }
 
-    public AccessTree(NodeAccessTree root, JuridicPerson juridicPerson)
+    public AccessTree(NodeAccessTree root, JuridicPerson data_owner)
     {
         setRoot(root);
-        setJuridicPerson(juridicPerson);
+        setData_owner(data_owner);
     }
 
 
@@ -45,6 +44,7 @@ public class AccessTree {
             AccessTree accessTree = new AccessTree();
             String infix = "((A+B+C+D+E+F+G+H+I+J)*K)";
             NodeAccessTree root = accessTree.constructTree(infix);
+
             accessTree = new AccessTree(root,user);
             trees.add(accessTree);
         }
@@ -79,24 +79,12 @@ public class AccessTree {
         return resultTree;
     }
 
-    public static boolean checkTree(Individual individual)
+    public boolean checkTree(Individual individual)
     {
         Position position = individual.getPosition();
-        return (individual.getPlaceJOB() == juridicPerson) && (Individual.getAccord_superior() == ACCORD_SUPERIOR.YES) &&
-                (position != Position.INDIVIDUAL);
+        return (individual.getPlaceJOB().getID_user() == data_owner.getID_user()) && (individual.getAccord_superior() == ACCORD_SUPERIOR.YES) && (position != Position.INDIVIDUAL);
     }
 
-    /**
-     * Function which check if the value of a node is an operator
-     * @param c the value of a node , which can be an operand/operator
-     * @return boolean
-     */
-
-    boolean isOperator(char c) {
-        return c == '+' || c == '-'
-                || c == '*' || c == '/'
-                || c == '^';
-    }
 
     /**
      * Function which creates the access tree which is the same thing with the the expression tree
@@ -167,5 +155,9 @@ public class AccessTree {
         }
         t = stN.peek();
         return t;
+    }
+
+    public static User getData_owner() {
+        return data_owner;
     }
 }
