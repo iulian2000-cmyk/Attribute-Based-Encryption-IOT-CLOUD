@@ -1,6 +1,7 @@
 package Users;
 
 import SpecialDataStructures.ACCORD_SUPERIOR;
+import it.unisa.dia.gas.jpbc.Element;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,10 +26,19 @@ public class Individual extends User
 
     }
 
+
+    public Element getR() {
+         return this.r;
+    }
+
+    public  void setR(Element r_element) {
+       this.r = r_element;
+    }
     /**
      * Setter for ID user
      * @param ID_user_to_add user id
      */
+
     public void setID_user(int ID_user_to_add) {
         this.ID_user = ID_user_to_add;
     }
@@ -42,7 +52,6 @@ public class Individual extends User
         setPlaceJOB(job);
         setPosition(pos);
         setAccord_superior(accord_superior);
-
 
 
         //System.out.println(ID_user);

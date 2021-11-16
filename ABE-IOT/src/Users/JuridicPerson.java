@@ -1,5 +1,7 @@
 package Users;
 
+import it.unisa.dia.gas.jpbc.Element;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -28,6 +30,13 @@ public class JuridicPerson extends User {
         this.ID_user = ID_user_to_add;
     }
 
+    public Element getR() {
+        return super.r;
+    }
+
+    public  void setR(Element r_element) {
+        super.r = r_element;
+    }
 
     public JuridicPerson(int ID, String name, String Address, String juridicForm, String uniqueCODE, String activity_COD, Date dateBirth)
     {

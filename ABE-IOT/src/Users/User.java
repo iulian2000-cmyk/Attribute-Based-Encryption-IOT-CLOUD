@@ -47,11 +47,5 @@ public class User {
         t = T;
     }
 
-    public  Element getR() {
-        return r;
-    }
 
-    public  void setR(Element r_element) {
-        r = r_element;
-    }
 }

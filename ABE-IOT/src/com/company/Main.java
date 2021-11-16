@@ -43,7 +43,7 @@ public class Main {
 
         System.out.println("SK FOR A USER : \n ");
         JuridicPerson firstUser = new JuridicPerson(1, "Bitdefender", "Bucuresti", "SRL", "312313", "13231", new Date(2000, 1, 1));
-        User secondUser = new Individual(2,"Rusu Alexandru","Bucuresti","3123123132131231", new Date(2000, 2, 6), firstUser,Position.EMPLOYEE_PRODUCTION,ACCORD_SUPERIOR.YES);
+        Individual secondUser = new Individual(2,"Rusu Alexandru","Bucuresti","3123123132131231", new Date(2000, 2, 6), firstUser,Position.EMPLOYEE_PRODUCTION,ACCORD_SUPERIOR.YES);
         JuridicPerson thirdUser = new JuridicPerson(3, "Endava", "Iasi", "SA", "1323131", "123131", new Date(1990, 3, 3));
         User  forthUser = new Individual(4,"Rusu Alexandru","Bucuresti","3123123132131231", new Date(2000, 2, 6), thirdUser,Position.EMPLOYEE_PRODUCTION,ACCORD_SUPERIOR.YES);
 
@@ -84,6 +84,7 @@ public class Main {
         System.out.println("\n                                                                          III . DECRYPTION USING PP-CP-ABE SCHEME                                                                                                    ");
 
         TA.decryptMessage(TA.getCipherText(),(Individual) secondUser);
+        TA.decryptMessage(TA.getCipherText(),(Individual) forthUser);
 
 
 

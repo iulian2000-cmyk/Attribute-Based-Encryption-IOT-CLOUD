@@ -7,6 +7,7 @@ public class NodeAccessTree {
 
     public char value;
     public int k_treshold;
+    public int index;
     public NodeAccessTree left,right;
     public  Polynomial polynomial;
     public  NodeAccessTree parent;
@@ -75,6 +76,11 @@ public class NodeAccessTree {
         this.right = right;
     }
 
+    public int getIndex() {
+        return index;
+    }
 
-
+    public void setIndex(int index) {
+        this.index = index;
+    }
 }

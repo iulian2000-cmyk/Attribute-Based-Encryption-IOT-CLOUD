@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.Vector;
 import SpecialDataStructures.Polynomial;
 
+import javax.annotation.processing.SupportedSourceVersion;
 
 
 public class TrustAuthority {
@@ -58,6 +59,13 @@ public class TrustAuthority {
         return beta;
     }
 
+    /**
+     * Constructor
+     * @param G - the G field
+     * @param g - generator of g
+     * @param Zr1 - the field Zp
+     * @param pairing - the pairing function
+     */
     public TrustAuthority(Field G, Element g, Field Zr1, Pairing pairing) {
         G0 = G;
         generator = g;
@@ -99,14 +107,18 @@ public class TrustAuthority {
      * Function which generates the SK
      * @param user the user for which the SK is generated
      */
-    public  void generateSK(User user)
+    public  void generateSK(Individual user)
     {
         Element r = Zr.newRandomElement();
         Element D = generator.pow(alpha.add(r).div(beta).toBigInteger());
         user.setD(D);
+
+        Element compareElement = r;
+        compareElement.set(0);
+        while(r.isEqual(compareElement)){
+            r = Zr.newRandomElement();
+        }
         user.setR(r);
-
-
         for(String attribute : user.getList_attributes()) {
             Element rj = Zr.newRandomElement();
             System.out.println("L[" + user.getList_attributes().indexOf(attribute) + "]=" + CalculateLj(rj, generator));
@@ -171,7 +183,7 @@ public class TrustAuthority {
                     node.setPolynomial(new Polynomial(coefficients,powers,degree));
                     if(indexNode == 0) {
                         s = node.getPolynomial().evaluate(0);
-                        s1 = node.getPolynomial().evaluate(1);
+                         s1 = node.getPolynomial().evaluate(1);
                         s2 = node.getPolynomial().evaluate(2);
                     }
             }else{
@@ -296,6 +308,7 @@ public class TrustAuthority {
     public NodeAccessTree getProductTree(NodeAccessTree A,NodeAccessTree B)
     {
         NodeAccessTree resultTree = new NodeAccessTree('*');
+        resultTree.setIndex(0);
         resultTree.setLeft(A);
         resultTree.setRight(B);
         return resultTree;
@@ -322,22 +335,33 @@ public class TrustAuthority {
         return cipherText;
     }
 
-    public void setCiphertext(NodeAccessTree TreeESP, NodeAccessTree DO, String message, User DO_user)
+    /**
+     * Setter
+     * @param TreeESP - the access tree of the ESP service
+     * @param message - message
+     * @param DO_user - data owner
+     */
+    public void setCiphertext(NodeAccessTree TreeESP, NodeAccessTree TreeDO, String message, User DO_user)
     {
         Vector<NodeAccessTree> leafNodesTreeESP  = new Vector<>();
         getLeafNodes(TreeESP,leafNodesTreeESP);
         Vector<NodeAccessTree> leafNodesDO = new Vector<>();
-        getLeafNodes(DO,leafNodesDO);
+        getLeafNodes(TreeDO,leafNodesDO);
 
         Vector<NodeAccessTree> leafNodes = new Vector<>();
         leafNodes.addAll(leafNodesDO);
         leafNodes.addAll(leafNodesTreeESP);
 
-        cipherText = new Ciphertext_CT(getProductTree(TreeESP,DO),message,h.pow(BigInteger.valueOf((long)s)),
-                pairingFunction.pairing(generator,generator).pow(alpha.toBigInteger()).pow(BigInteger.valueOf((long)s)),leafNodes,(JuridicPerson) DO_user);
+        cipherText = new Ciphertext_CT(getProductTree(TreeESP,TreeDO),message,h.pow(BigInteger.valueOf((long)s)),
+                pairingFunction.pairing(generator,generator).pow(alpha.toBigInteger()).pow(BigInteger.valueOf((long)s)),leafNodes,(JuridicPerson) DO_user,
+                TreeESP,TreeDO);
     }
 
-    public void generateBlindedSK(User user)
+    /**
+     * This function generates the blinded key
+     * @param user the user for each the blinded key is generated.
+     */
+    public void generateBlindedSK(Individual user)
     {
         Element t = Zr.newRandomElement();
         user.setT(t);
@@ -348,22 +372,99 @@ public class TrustAuthority {
     }
 
 
-    public void calculateF_values(Vector<NodeAccessTree> leafNodes,Element r)
+    /**
+     * This function calculates the F_y values for each leaf node .
+     * @param leafNodes the set of leaf nodes
+     * @param r the r-selected for our user in the setup stage .
+     */
+    public void calculateFy_values(Vector<NodeAccessTree> leafNodes,Element r)
     {
         for(NodeAccessTree node : leafNodes)
         {
             //System.out.println(pairingFunction.pairing(generator.pow(r.toBigInteger()),generator.pow(BigInteger.valueOf(node.getPolynomial().evaluate(0)))))    ;
-            node.setF_y(pairingFunction.pairing(generator,generator).pow(r.mul(BigInteger.valueOf(node.getPolynomial().evaluate(0))).toBigInteger()));
-            System.out.println("F_" + node.value + " :=" + pairingFunction.pairing(generator,generator).pow(r.mul(BigInteger.valueOf(node.getPolynomial().evaluate(0))).toBigInteger()));
+            node.setF_y(pairingFunction.pairing(generator,generator).pow(r.duplicate().mul(BigInteger.valueOf(node.getPolynomial().evaluate(0))).toBigInteger()));
+            System.out.println("Fy_" + node.value + " :=" + pairingFunction.pairing(generator,generator).pow(r.mul(BigInteger.valueOf(node.getPolynomial().evaluate(0))).toBigInteger()));
         }
     }
+
+    /**
+     * This function gets the set of child nodes for a node X .
+     * @param nodeAccessTree - the node for which the set of  child nodes are determined .
+     * @param nodes the set of nodes
+     */
+    public void generateChildNodesSet(NodeAccessTree nodeAccessTree,Vector<NodeAccessTree> nodes)
+    {
+        if(nodeAccessTree!=null)
+        {
+            if(nodeAccessTree.right!=null && nodeAccessTree.left!=null)
+            {
+                nodes.add(nodeAccessTree.right);
+                nodes.add(nodeAccessTree.left);
+                generateChildNodesSet(nodeAccessTree.right,nodes);
+                generateChildNodesSet(nodeAccessTree.left,nodes);
+            }
+        }
+    }
+
+    /**
+     * This function calculates Fx for a node.
+     * @param nodeAccessTree the node itself
+     * @param r the r-randomly chosen
+     */
+
+    public void calculateFx_values(NodeAccessTree nodeAccessTree,Element r)
+    {
+        if(nodeAccessTree!=null)
+        {
+            Vector<NodeAccessTree> childNodes = new Vector<>();
+            generateChildNodesSet(nodeAccessTree,childNodes);
+            for (NodeAccessTree nodeChild : childNodes)
+            {
+
+                System.out.println("Fx_" + nodeChild.value + ":=" + pairingFunction.pairing(generator,generator).pow(r.duplicate().mul(BigInteger.valueOf(nodeChild.getPolynomial().evaluate(0))).toBigInteger()));
+            }
+            if(nodeAccessTree.right!=null && nodeAccessTree.left!=null)
+            {
+                calculateFx_values(nodeAccessTree.right,r.duplicate());
+                calculateFx_values(nodeAccessTree.left,r.duplicate());
+            }
+        }
+    }
+
+    /**
+     * This function decrypt the message .
+     * @param CT the ciphertext
+     * @param DR the data requester
+     */
     public void decryptMessage(Ciphertext_CT CT,Individual DR )
     {
         if(CT.getTree().checkTree(DR)){
             //System.out.println("Access tree satisfied");
             generateBlindedSK(DR);
-            calculateF_values(CT.getLeafNodes(),DR.getR());
+            Element r = DR.getR();
 
+            System.out.println("\n 1.Calculate F_y values for each leaf node  \n");
+
+            calculateFy_values(CT.getLeafNodes(),r);
+
+            System.out.println("\n 2.Calculate F_x values for each leaf node  \n");
+            calculateFx_values(CT.getTree().getRoot(),r);
+            System.out.println("A :=" + pairingFunction.pairing(generator,generator).pow(r.duplicate().mul(CT.getTreeDO().getPolynomial().evaluate(0)).toBigInteger()));
+            Element A = pairingFunction.pairing(generator,generator).pow(r.duplicate().mul(CT.getTreeDO().getPolynomial().evaluate(0)).toBigInteger());
+
+            Element power_1 = DR.getT().mul(r.duplicate().mul(BigInteger.valueOf(CT.getTreeDO().getPolynomial().evaluate(0))));
+            Element power_2 = DR.getT().mul(alpha.mul(BigInteger.valueOf(CT.getTreeDO().getPolynomial().evaluate(0))));
+            System.out.println("B :=" + pairingFunction.pairing(generator,generator).pow(power_1.toBigInteger()).mul(pairingFunction.pairing(generator,generator).pow(power_2.toBigInteger())));
+
+            Element B = pairingFunction.pairing(generator,generator).pow(power_1.toBigInteger()).mul(pairingFunction.pairing(generator,generator).pow(power_2.toBigInteger()));
+
+            Element B_ = pairingFunction.pairing(generator,generator).pow(r.duplicate().mul(BigInteger.valueOf(CT.getTreeDO().getPolynomial().evaluate(0))).toBigInteger()).mul(pairingFunction.pairing(generator,generator).pow(alpha.mul(BigInteger.valueOf(CT.getTreeDO().getPolynomial().evaluate(0))).toBigInteger()));
+            System.out.println("B\' :=" + B_);
+
+            if(B_.div(A).isEqual(CT.getPairingResult()))
+            {
+                System.out.println("Message decrypted := " + CT.getMessage());
+            }
         }else{
             System.out.println("Access tree not satisfied ");
         }

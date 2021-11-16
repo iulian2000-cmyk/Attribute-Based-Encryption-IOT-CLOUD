@@ -10,7 +10,8 @@ public class Ciphertext_CT {
     private  Element C;
     private  Element pairingResult;
     private  Vector<NodeAccessTree> leafNodes;
-
+    private NodeAccessTree TreeESP;
+    private NodeAccessTree TreeDO;
     public  Vector<NodeAccessTree> getLeafNodes() {
         return leafNodes;
     }
@@ -53,7 +54,7 @@ public class Ciphertext_CT {
          pairingResult = pairingFunction;
     }
 
-    public Ciphertext_CT(NodeAccessTree tree, String msg, Element C, Element pairingResult, Vector<NodeAccessTree> leafNodes, JuridicPerson juridicPerson)
+    public Ciphertext_CT(NodeAccessTree tree, String msg, Element C, Element pairingResult, Vector<NodeAccessTree> leafNodes, JuridicPerson juridicPerson,NodeAccessTree TreeESP,NodeAccessTree TreeDO)
     {
         AccessTree accessTree = new AccessTree(tree,juridicPerson);
         setTree(accessTree);
@@ -61,5 +62,24 @@ public class Ciphertext_CT {
         setMessage(msg);
         setC(C);
         setLeafNodes(leafNodes);
+        setTreeDO(TreeDO);
+        setTreeESP(TreeESP);
+        setPairingResult(pairingResult);
+    }
+
+    public NodeAccessTree getTreeESP() {
+        return TreeESP;
+    }
+
+    public void setTreeESP(NodeAccessTree treeESP) {
+        TreeESP = treeESP;
+    }
+
+    public NodeAccessTree getTreeDO() {
+        return TreeDO;
+    }
+
+    public void setTreeDO(NodeAccessTree treeDO) {
+        TreeDO = treeDO;
     }
 }
