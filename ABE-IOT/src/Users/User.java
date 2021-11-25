@@ -1,5 +1,6 @@
 package Users;
 
+import ABDS_System.FileStored;
 import it.unisa.dia.gas.jpbc.Element;
 import java.util.List;
 import java.util.Vector;
@@ -12,6 +13,7 @@ public class User {
     protected  Element blindedD;
     protected  Element r;
     protected  List<String> list_attributes ;
+    protected String infixExpressionOfAccessPolicy;
 
 
     public  List<String> getList_attributes() {
@@ -47,5 +49,11 @@ public class User {
         t = T;
     }
 
+    public String getInfixExpressionOfAccessPolicy() {
+        return infixExpressionOfAccessPolicy;
+    }
 
+    public void setInfixExpressionOfAccessPolicy(String infixExpressionOfAccessPolicy) {
+        this.infixExpressionOfAccessPolicy = infixExpressionOfAccessPolicy;
+    }
 }

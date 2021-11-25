@@ -1,6 +1,8 @@
 package SetupStage;
 
 
+import ABDS_System.FileStored;
+import SpecialDataStructures.AccessTree;
 import SpecialDataStructures.Ciphertext_CT;
 import SpecialDataStructures.NodeAccessTree;
 import Users.Individual;
@@ -13,8 +15,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 import SpecialDataStructures.Polynomial;
-
-import javax.annotation.processing.SupportedSourceVersion;
 
 
 public class TrustAuthority {
@@ -103,6 +103,33 @@ public class TrustAuthority {
         return MK;
     }
 
+    /**
+     * The procedure which makes a user download a file .
+     * @param  individual - the individual which execute the download procedure
+     * @param file - the file which will be downloaded .
+     * @return void
+     */
+    public void userDownloadFile(Individual individual, FileStored file,String location) throws Exception
+    {
+        if ( individual == file.getOwnerFile() )
+        {
+            file.downloadFile(location);
+        }else{
+            AccessTree accessTree = new AccessTree();
+            String infix = file.getOwnerFile().getInfixExpressionOfAccessPolicy();
+            NodeAccessTree root = accessTree.constructTree(infix);
+            accessTree = new AccessTree(root, (JuridicPerson) file.getOwnerFile());
+            accessTree.setInfixExpression(infix);
+            if(accessTree.checkTree(individual)){
+                System.out.println("The individual can download the file !");
+                file.downloadFile(location);
+            }else
+            {
+                System.out.println("The individual can't access the file !");
+            }
+        }
+
+    }
     /**
      * Function which generates the SK
      * @param user the user for which the SK is generated
@@ -436,7 +463,7 @@ public class TrustAuthority {
      * @param CT the ciphertext
      * @param DR the data requester
      */
-    public void decryptMessage(Ciphertext_CT CT,Individual DR )
+    public void decryptMessage(Ciphertext_CT CT,Individual DR ) throws Exception
     {
         if(CT.getTree().checkTree(DR)){
             //System.out.println("Access tree satisfied");

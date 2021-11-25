@@ -1,4 +1,4 @@
-package com.company;
+package mainApp;
 
 
 
@@ -11,15 +11,14 @@ import Users.Individual;
 import Users.JuridicPerson;
 import Users.Position;
 import Users.User;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
 
-public class Main {
 
-    public static void main(String[] args)  {
+
+public class Application {
+    public static void main(String[] args) throws Exception {
         System.out.print(
                 "        d88888888b    d8888.      88888888db         ***      ******     **********        \n" +
                         "        88'     88    YP  8P8     8Y                           **   **       ***          \n" +
@@ -42,9 +41,9 @@ public class Main {
 
 
         System.out.println("SK FOR A USER : \n ");
-        JuridicPerson firstUser = new JuridicPerson(1, "Bitdefender", "Bucuresti", "SRL", "312313", "13231", new Date(2000, 1, 1));
+        JuridicPerson firstUser = new JuridicPerson(1, "Bitdefender", "Bucuresti", "SRL", "312313", "13231", new Date(2000, 1, 1),"((A+B+C+D+E+F+G+H+I+J)*K)");
         Individual secondUser = new Individual(2,"Rusu Alexandru","Bucuresti","3123123132131231", new Date(2000, 2, 6), firstUser,Position.EMPLOYEE_PRODUCTION,ACCORD_SUPERIOR.YES);
-        JuridicPerson thirdUser = new JuridicPerson(3, "Endava", "Iasi", "SA", "1323131", "123131", new Date(1990, 3, 3));
+        JuridicPerson thirdUser = new JuridicPerson(3, "Endava", "Iasi", "SA", "1323131", "123131", new Date(1990, 3, 3),"((A+B+C+D+E+F+G+H+I+J)*K)");
         User  forthUser = new Individual(4,"Rusu Alexandru","Bucuresti","3123123132131231", new Date(2000, 2, 6), thirdUser,Position.EMPLOYEE_PRODUCTION,ACCORD_SUPERIOR.YES);
 
         TA.generateSK(secondUser);
@@ -85,10 +84,6 @@ public class Main {
 
         TA.decryptMessage(TA.getCipherText(),(Individual) secondUser);
         TA.decryptMessage(TA.getCipherText(),(Individual) forthUser);
-
-
-
-
 
 
     }

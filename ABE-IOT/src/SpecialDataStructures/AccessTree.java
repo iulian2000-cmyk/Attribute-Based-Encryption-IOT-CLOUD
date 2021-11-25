@@ -5,21 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
 public class AccessTree {
     private static NodeAccessTree root;
     private static JuridicPerson data_owner;
     public  AccessTree(){
 
     }
+    public static String infixExpression;
     public static NodeAccessTree getRoot() {
         return root;
     }
     public static void setRoot(NodeAccessTree root) {
         AccessTree.root = root;
     }
-
-
     public static void setData_owner(JuridicPerson DO) {
         data_owner = DO;
     }
@@ -42,10 +40,12 @@ public class AccessTree {
         for(JuridicPerson user : users)
         {
             AccessTree accessTree = new AccessTree();
-            String infix = "((A+B+C+D+E+F+G+H+I+J)*K)";
+            //String infix = "((A+B+C+D+E+F+G+H+I+J)*K)";
+            String infix = user.getInfixExpressionOfAccessPolicy();
+            setInfixExpression(infix);
             NodeAccessTree root = accessTree.constructTree(infix);
-
             accessTree = new AccessTree(root,user);
+            accessTree.setInfixExpression(infixExpression);
             trees.add(accessTree);
         }
         return trees;
@@ -79,10 +79,128 @@ public class AccessTree {
         return resultTree;
     }
 
-    public boolean checkTree(Individual individual)
+    /**
+     * Function which checks if an individual satisfy the access tree
+     * @param individual - the individual
+     * @return boolean
+     */
+    public boolean checkTree(Individual individual) throws Exception
     {
         Position position = individual.getPosition();
-        return (individual.getPlaceJOB().getID_user() == data_owner.getID_user()) && (individual.getAccord_superior() == ACCORD_SUPERIOR.YES) && (position != Position.INDIVIDUAL);
+        //return (individual.getPlaceJOB().getID_user() == data_owner.getID_user()) && (individual.getAccord_superior() == ACCORD_SUPERIOR.YES) && (position != Position.INDIVIDUAL);
+
+        if( individual.getPlaceJOB().getID_user() == data_owner.getID_user()) {
+            String copy_expression = infixExpression;
+            StringBuilder expression = new StringBuilder(copy_expression);
+            ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
+            //System.out.println(expression.toString());
+            for (int index_character = 0; index_character < copy_expression.length(); index_character++) {
+                if (copy_expression.charAt(index_character) != ')' && copy_expression.charAt(index_character) != '(' && copy_expression.charAt(index_character) != '+' && copy_expression.charAt(index_character) != '*') {
+                    char ch_value = '0';
+                    switch (copy_expression.charAt(index_character))
+                    {
+                        case 'A':
+                            if(position == Position.EMPLOYEE_PRODUCTION)
+                            {
+                               ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'B':
+                            if(position == Position.LEADER_PRODUCTION)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'C':
+                            if(position == Position.DIRECTOR_PRODUCTION)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'D':
+                            if(position == Position.ACCOUNTANT)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'E':
+                            if(position == Position.CHIEF_ACCOUNTANT)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'F':
+                            if(position == Position.DIRECTOR_ECONOMIC)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'G':
+                            if(position == Position.DIRECTOR)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'H':
+                            if(position == Position.ADMINISTRATOR)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'I':
+                            if(position == Position.CEO)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'J':
+                            if(position == Position.SECURITY_ADMIN)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                        case 'K':
+                            if(individual.getAccord_superior() == ACCORD_SUPERIOR.YES)
+                            {
+                                ch_value = '1';
+                            }else{
+                                ch_value = '0';
+                            }
+                            break;
+                    }
+                    expression.setCharAt(index_character,ch_value);
+                }
+            }
+            //System.out.println(expression.toString());
+            if(expressionEvaluator.evaluate(expression.toString()) == 1)
+            {
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 
 
@@ -159,5 +277,13 @@ public class AccessTree {
 
     public static User getData_owner() {
         return data_owner;
+    }
+
+    public static String getInfixExpression() {
+        return infixExpression;
+    }
+
+    public static void setInfixExpression(String infixExpression) {
+        AccessTree.infixExpression = infixExpression;
     }
 }

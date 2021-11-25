@@ -38,7 +38,7 @@ public class JuridicPerson extends User {
         super.r = r_element;
     }
 
-    public JuridicPerson(int ID, String name, String Address, String juridicForm, String uniqueCODE, String activity_COD, Date dateBirth)
+    public JuridicPerson(int ID, String name, String Address, String juridicForm, String uniqueCODE, String activity_COD, Date dateBirth,String infixExpressionOfAccessPolicy)
     {
         setID_user(ID);
         setOfficialName(name);
@@ -47,7 +47,7 @@ public class JuridicPerson extends User {
         setUniqueCODE(uniqueCODE);
         setActivity_COD(activity_COD);
         setDateBirth(dateBirth);
-
+        setInfixExpressionOfAccessPolicy(infixExpressionOfAccessPolicy);
         //System.out.println(ID_user);
 
         this.list_attributes = new ArrayList<>();

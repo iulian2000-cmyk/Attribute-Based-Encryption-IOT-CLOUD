@@ -21,10 +21,6 @@ public class Polynomial {
          powers = Powers;
     }
 
-
-
-
-
     public void setCoefficients(Vector<Integer> coeficients) {
         this.coefficients = coeficients;
     }
