@@ -21,3 +21,6 @@ Each company,individual,organization defines a an access policy . An access poli
 > - J = SECURITY_ADMIN 
 >  -K = ACCORD_SUPERIOR.YES,ACCORD_SUPERIOR.NO
 >  -L = INDIVIDUAL 
+
+> In other words , an access policy can be seen as a formula from propositional logic , in which the variables are from the described list and the logical operators allowed are OR and AND  . 
+> Example : ( A AND B) OR C 
