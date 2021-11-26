@@ -6,3 +6,4 @@
 ## II . Context.
 > Let's say that we have a number of companies,individuals,organizations whose data are stored encrypted on Cloud . This mechanism uses also elements from 
 access control , mainly a variation from RBAC to ABAC . The idea is to ensure confidentiality , integrity and availabilty to our data which is stored . 
+Each company,individual,organization defines a an access policy . An access policy is a method to describe the properties on which a user must satisfy in order to have access the data of another user . 
