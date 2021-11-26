@@ -7,3 +7,17 @@
 > Let's say that we have a number of companies,individuals,organizations whose data are stored encrypted on Cloud . This mechanism uses also elements from 
 access control , mainly a variation from RBAC to ABAC . The idea is to ensure confidentiality , integrity and availabilty to our data which is stored . 
 Each company,individual,organization defines a an access policy . An access policy is a method to describe the properties on which a user must satisfy in order to have access the data of another user . 
+
+> In our system an user can have one or multiple roles ,listed below :
+> - A = EMPLOYEE_PRODUCTION
+> - B = LEADER_PRODUCTION 
+> - C = DIRECTOR_PRODUCTION 
+> - D = ACCOUNTANT
+> - E = CHIEF_ACCOUNTANT
+> - F = DIRECTOR_ECONOMIC
+> - G = DIRECTOR
+> - H = ADMINISTRATOR
+> - I = CEO
+> - J = SECURITY_ADMIN 
+>  -K = ACCORD_SUPERIOR.YES,ACCORD_SUPERIOR.NO
+>  -L = INDIVIDUAL 
